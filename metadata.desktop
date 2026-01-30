@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=Blank SDDM Theme
+Description=Just a blank SDDM theme based on where-is-my-sddm-theme.
+Author=ForeverWeLearn
+Copyright=(c) 2026, ForeverWeLearn
+License=MIT
+Version=1.0.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=blank-sddm-theme
+QtVersion=6
