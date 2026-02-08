@@ -1,12 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.0
 
+
 Item {
     id: root
 
     property string text: ""
-    property string prevText: ""
-    property string nextText: ""
     property int fontPointSize: sessionsFontSize
     property string fontFamily: defaultFont
 
@@ -24,39 +23,5 @@ Item {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
-
     }
-
-    Text {
-        id: prevButton
-
-        text: root.prevText
-        color: textColor
-        font.pointSize: root.fontPointSize
-        font.family: root.fontFamily
-
-        anchors {
-            left: parent.left
-            verticalCenter: parent.verticalCenter
-            rightMargin: 5
-        }
-
-    }
-
-    Text {
-        id: nextButton
-
-        text: root.nextText
-        color: textColor
-        font.pointSize: root.fontPointSize
-        font.family: root.fontFamily
-
-        anchors {
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-            leftMargin: 5
-        }
-
-    }
-
 }

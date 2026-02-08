@@ -3,10 +3,13 @@ import QtQuick 2.15
 import QtQuick.Controls 2.0
 import SddmComponents 2.0
 
+
 Rectangle {
     id: root
 
     readonly property color textColor: config.stringValue("basicTextColor")
+    readonly property color backgroundColor: config.stringValue("backgroundFill") || "transparent"
+
     property int currentUsersIndex: userModel.lastIndex
     property int currentSessionsIndex: sessionModel.lastIndex
     property int usernameRole: Qt.UserRole + 1
@@ -14,23 +17,26 @@ Rectangle {
     property int sessionNameRole: Qt.UserRole + 4
     property string currentUsername: config.boolValue("showUserRealNameByDefault") ? userModel.data(userModel.index(currentUsersIndex, 0), realNameRole) : userModel.data(userModel.index(currentUsersIndex, 0), usernameRole)
     property string currentSession: sessionModel.data(sessionModel.index(currentSessionsIndex, 0), sessionNameRole)
-    property string passwordFontSize: config.intValue("passwordFontSize") || 96
-    property string usersFontSize: config.intValue("usersFontSize") || 48
-    property string sessionsFontSize: config.intValue("sessionsFontSize") || 24
+    
     property string defaultFont: config.stringValue("font") || "monospace"
+    property string sessionsFontSize: config.intValue("sessionsFontSize") || 36
+    property string usersFontSize: config.intValue("usersFontSize") || 36
+    property string passwordFontSize: config.intValue("passwordFontSize") || 96
 
     function usersCycleSelectNext() {
-        if (currentUsersIndex >= userModel.count - 1)
+        if (currentUsersIndex >= userModel.count - 1) {
             currentUsersIndex = 0;
-        else
+        } else {
             currentUsersIndex++;
+        }
     }
 
     function sessionsCycleSelectNext() {
-        if (currentSessionsIndex >= sessionModel.rowCount() - 1)
+        if (currentSessionsIndex >= sessionModel.rowCount() - 1) {
             currentSessionsIndex = 0;
-        else
+        } else {
             currentSessionsIndex++;
+        }
     }
 
     width: 640
@@ -62,10 +68,10 @@ Rectangle {
             onActivated: {
                 if (!username.visible) {
                     username.visible = true;
-                    if (!sessionName.visible)
+                    if (!sessionName.visible) {
                         sessionName.visible = true;
-
-                    return ;
+                    }
+                    return;
                 }
                 usersCycleSelectNext();
             }
@@ -76,10 +82,10 @@ Rectangle {
             onActivated: {
                 if (!username.visible) {
                     username.visible = true;
-                    if (!sessionName.visible)
+                    if (!sessionName.visible) {
                         sessionName.visible = true;
-
-                    return ;
+                    }
+                    return;
                 }
                 sessionsCycleSelectNext();
             }
@@ -88,27 +94,27 @@ Rectangle {
         Shortcut {
             sequence: "F10"
             onActivated: {
-                if (sddm.canSuspend)
+                if (sddm.canSuspend) {
                     sddm.suspend();
-
+                }
             }
         }
 
         Shortcut {
             sequence: "F11"
             onActivated: {
-                if (sddm.canPowerOff)
+                if (sddm.canPowerOff) {
                     sddm.powerOff();
-
+                }
             }
         }
 
         Shortcut {
             sequence: "F12"
             onActivated: {
-                if (sddm.canReboot)
+                if (sddm.canReboot) {
                     sddm.reboot();
-
+                }
             }
         }
 
@@ -132,39 +138,24 @@ Rectangle {
             echoMode: config.boolValue("passwordMask") ? TextInput.Password : null
             color: config.stringValue("passwordTextColor") || textColor
             selectionColor: textColor
-            selectedTextColor: "#000000"
+            selectedTextColor: textColor
             clip: true
             horizontalAlignment: TextInput.AlignHCenter
             verticalAlignment: TextInput.AlignVCenter
             leftPadding: font.letterSpacing
             passwordCharacter: config.stringValue("passwordCharacter") || "*"
             cursorVisible: false
-            onAccepted: {
-                if (text != "" || config.boolValue("passwordAllowEmpty"))
-                    sddm.login(userModel.data(userModel.index(currentUsersIndex, 0), usernameRole) || "123test", text, currentSessionsIndex);
 
+            onAccepted: {
+                if (text != "" || config.boolValue("passwordAllowEmpty")) {
+                    sddm.login(userModel.data(userModel.index(currentUsersIndex, 0), usernameRole) || "123test", text, currentSessionsIndex);
+                }
             }
 
             anchors {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
             }
-
-        }
-
-        UsersChoose {
-            id: username
-
-            text: currentUsername
-            visible: config.boolValue("showUsersByDefault")
-            width: mainFrame.width / 5 / 36 * usersFontSize
-
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: parent.verticalCenter
-                topMargin: usersFontSize
-            }
-
         }
 
         SessionsChoose {
@@ -179,20 +170,30 @@ Rectangle {
                 bottom: parent.verticalCenter
                 bottomMargin: sessionsFontSize * 1.2
             }
-
         }
 
+        UsersChoose {
+            id: username
+
+            text: currentUsername
+            visible: config.boolValue("showUsersByDefault")
+            width: mainFrame.width / 5 / 36 * usersFontSize
+
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                top: parent.verticalCenter
+                topMargin: usersFontSize
+            }
+        }
     }
 
     Loader {
-        active: config.boolValue("hideCursor") || false
+        active: true
         anchors.fill: parent
 
         sourceComponent: MouseArea {
             enabled: false
             cursorShape: Qt.BlankCursor
         }
-
     }
-
 }
